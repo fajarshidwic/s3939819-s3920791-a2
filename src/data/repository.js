@@ -3,23 +3,9 @@ const USER_KEY = "user";
 
 // Initialise local storage "users" with data, if the data is already set this function returns immediately.
 function initUsers() {
-  // Stop if data is already initialised.
-  if(localStorage.getItem(USERS_KEY) !== null)
-    return;
+  if (localStorage.getItem(USERS_KEY) !== null) return;
 
-  // User data is hard-coded, passwords are in plain-text.
-  const users = [
-    {
-      username: "mbolger",
-      password: "abc123"
-    },
-    {
-      username: "shekhar",
-      password: "def456"
-    }
-  ];
-
-  // Set data into local storage.
+  const users = [];
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
@@ -57,27 +43,18 @@ function removeUser() {
   localStorage.removeItem(USER_KEY);
 }
 
-function registerUser(username, password) {
+function registerUser(username, email, password) {
   const users = getUsers();
-
-  // Check if the username is already taken
-  if (users.some(user => user.username === username)) {
-    return false; // Username already exists
+  const existingUser = users.find(user => user.username === username);
+  
+  if (existingUser) {
+    return false; // User already exists
+  } else {
+    const newUser = { username, email, password };
+    users.push(newUser);
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    return true; // Registration successful
   }
-
-  // Create a new user object
-  const newUser = {
-    username,
-    password // Note: In a real application, passwords should be hashed before storing
-  };
-
-  // Push the new user to the array
-  users.push(newUser);
-  
-  // Update data in local storage
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  
-  return true; // Registration successful
 }
 
 export {

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { verifyUser } from "../data/repository";
-import Register from "./Register";
 
 function Login(props) {
-  const [showRegister, setShowRegister] = useState(false);
   const [fields, setFields] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
@@ -47,37 +45,37 @@ function Login(props) {
     setErrorMessage("Username and / or password invalid, please try again.");
   }
 
+  const handleRegisterClick = () => {
+    navigate("/Register"); // Redirect to the register route
+  };
+
   return (
     <div>
       <h1>Login</h1>
       <hr />
       <div className="row">
         <div className="col-md-6">
-          {showRegister ? (
-              <Register />
-            ) : (
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="username" className="control-label">Username</label>
-                <input name="username" id="username" className="form-control"
-                  value={fields.username} onChange={handleInputChange} />
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="username" className="control-label">Username</label>
+              <input name="username" id="username" className="form-control"
+                value={fields.username} onChange={handleInputChange} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password" className="control-label">Password</label>
+              <input type="password" name="password" id="password" className="form-control"
+                value={fields.password} onChange={handleInputChange} />
+            </div>
+            <div className="form-group">
+                <button type="submit" className="btn btn-primary">Login</button>
+                <button type="button" className="btn btn-secondary ml-2" onClick={handleRegisterClick}>Register</button>
               </div>
+            {errorMessage !== null &&
               <div className="form-group">
-                <label htmlFor="password" className="control-label">Password</label>
-                <input type="password" name="password" id="password" className="form-control"
-                  value={fields.password} onChange={handleInputChange} />
+                <span className="text-danger">{errorMessage}</span>
               </div>
-              <div className="form-group">
-                  <button type="submit" className="btn btn-primary">Login</button>
-                  <button className="btn btn-secondary ml-2" onClick={() => setShowRegister(true)}>Register</button>
-                </div>
-              {errorMessage !== null &&
-                <div className="form-group">
-                  <span className="text-danger">{errorMessage}</span>
-                </div>
-              }
-            </form>
-          )}
+            }
+          </form>
         </div>
       </div>
     </div>
