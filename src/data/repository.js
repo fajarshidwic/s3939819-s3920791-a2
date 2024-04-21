@@ -39,7 +39,29 @@ function getUser() {
   return localStorage.getItem(USER_KEY);
 }
 
+function getUserObject() {
+  const username = localStorage.getItem(USER_KEY);
+  const users = getUsers();
+  return users.find(user => user.username === username) || {};
+}
+
 function removeUser() {
+  // Retrieve the users array from local storage
+  const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+
+  // Retrieve the username of the user to remove
+  const usernameToRemove = localStorage.getItem(USER_KEY);
+
+  // Find the index of the user to remove in the users array
+  const userIndex = users.findIndex((user) => user.username === usernameToRemove);
+
+  // If the user is found, remove it from the users array
+  if (userIndex !== -1) {
+    users.splice(userIndex, 1);
+
+    // Update the local storage with the modified users array
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
   localStorage.removeItem(USER_KEY);
 }
 
@@ -50,17 +72,63 @@ function registerUser(username, email, password) {
   if (existingUser) {
     return false; // User already exists
   } else {
-    const newUser = { username, email, password };
+    const newUser = { 
+      username,
+      email,
+      password,
+      createdAt: new Date().toISOString(), // Set createdAt to current date and time
+    };
     users.push(newUser);
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     return true; // Registration successful
   }
 }
 
+// Function to update user's username
+function updateUsername(username, newUsername) {
+  const users = getUsers();
+  const userIndex = users.findIndex(user => user.username === username);
+  if (userIndex !== -1) {
+    users[userIndex].username = newUsername;
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    return true;
+  }
+  return false;
+}
+
+// Function to update user's email
+function updateEmail(email, newEmail) {
+  const users = getUsers();
+  const userIndex = users.findIndex(user => user.email === email);
+  if (userIndex !== -1) {
+    users[userIndex].email = newEmail;
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    return true;
+  }
+  return false;
+}
+
+// Function to update user's password
+function updatePassword(password, newPassword) {
+  const users = getUsers();
+  const userIndex = users.findIndex(user => user.password === password);
+  if (userIndex !== -1) {
+    users[userIndex].password = newPassword;
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    return true;
+  }
+  return false;
+}
+
 export {
   initUsers,
   registerUser,
   verifyUser,
+  setUser,
   getUser,
-  removeUser
+  getUserObject,
+  removeUser,
+  updateUsername, 
+  updateEmail, 
+  updatePassword
 }
