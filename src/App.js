@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Navbar from "./fragments/Navbar";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { getUser, removeUser } from "./data/repository";
 import Footer from "./fragments/Footer";
+import Navbar from "./fragments/Navbar";
+import About from "./pages/About";
+import Forum from "./pages/Forum";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import MyProfile from "./pages/MyProfile";
 import MyProfileManagement from "./pages/MyProfileManagement";
-import Forum from "./pages/Forum";
-import { getUser, removeUser } from "./data/repository";
+import Register from "./pages/Register";
+import Shop from "./pages/Shop";
+
 
 function App() {
   const [username, setUsername] = useState(getUser());
@@ -23,6 +26,7 @@ function App() {
   }
 
   return (
+
     <div className="d-flex flex-column min-vh-100">
       <Router>
         <Navbar username={username} logoutUser={logoutUser} />
@@ -35,6 +39,8 @@ function App() {
               <Route path="/profile" element={<MyProfile username={username} />} />
               <Route path="/profile-management" element={<MyProfileManagement />} />
               <Route path="/forum" element={<Forum username={username} />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/shop" element={<Shop />} />
             </Routes>
           </div>
         </main>
