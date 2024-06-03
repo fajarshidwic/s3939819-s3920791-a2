@@ -1,8 +1,8 @@
 import React from "react";
-// import { getUserObject, removeUser } from "../data/repository";
+import { getUserObject, removeUser } from "../data/repository";
 
 function MyProfile(props) {
-  // const user = getUserObject();
+  const user = getUserObject();
 
   const handleDeleteProfile = async () => {
     try {
