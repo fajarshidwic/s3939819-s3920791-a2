@@ -1,12 +1,12 @@
 import React from "react";
-import { getUserObject, removeUser } from "../data/repository";
+// import { getUserObject, removeUser } from "../data/repository";
 
 function MyProfile(props) {
-  const user = getUserObject();
+  // const user = getUserObject();
 
   const handleDeleteProfile = async () => {
     try {
-      removeUser();
+      // removeUser();
       console.log("User profile deleted successfully");
     } catch (error) {
       console.error("Error deleting user profile:", error);
@@ -18,7 +18,7 @@ function MyProfile(props) {
       <div class="container container-fluid">
         <h1 className="display-4">My Profile</h1>
         <div class="row justify-content-around mt-5 user-info">
-          {user && (
+          {props.user && (
             <><div class="col-12 col-md-3">
               <figure class='avatar avatar-profile'>
                 <img class="rounded-circle img-fluid" src={process.env.PUBLIC_URL + 'logo512.png'} alt="Logo" />
@@ -33,13 +33,13 @@ function MyProfile(props) {
 
             <div class="col-12 col-md-5">
                  <h4>Username</h4>
-                 <p>{user.username}</p>
+                 <p>{props.user.username}</p>
      
                  <h4>Email Address</h4>
-                 <p>{user.email}</p>
+                 <p>{props.user.email}</p>
 
                  <h4>Date of Joining</h4>
-                 <p>{user.createdAt}</p>
+                 <p>{props.user.createdAt}</p>
             </div></>
           )}
         </div>
