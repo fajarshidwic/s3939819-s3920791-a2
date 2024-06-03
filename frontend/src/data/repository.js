@@ -49,22 +49,6 @@ function getUserObject() {
 }
 
 function removeUser() {
-  // Retrieve the users array from local storage
-  const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-
-  // Retrieve the username of the user to remove
-  const usernameToRemove = localStorage.getItem(USER_KEY);
-
-  // Find the index of the user to remove in the users array
-  const userIndex = users.findIndex((user) => user.username === usernameToRemove);
-
-  // If the user is found, remove it from the users array
-  if (userIndex !== -1) {
-    users.splice(userIndex, 1);
-
-    // Update the local storage with the modified users array
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  }
   localStorage.removeItem(USER_KEY);
 }
 

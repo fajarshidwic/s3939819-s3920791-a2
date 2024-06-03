@@ -15,7 +15,7 @@ function Navbar(props) {
             <li className="nav-item">
               <Link className="nav-link" to="/">Home</Link>
             </li>
-            {props.username !== null &&
+            {props.user !== null &&
               <>
                 <li className="nav-item">
                   <Link className="nav-link" to="/about">About</Link>
@@ -33,14 +33,14 @@ function Navbar(props) {
             }
           </ul>
           <ul className="navbar-nav">
-            {props.username === null ?
+            {props.user === null ?
               <li className="nav-item">
                 <Link className="nav-link" to="/login">Login</Link>
               </li>
               :
               <>
                 <li className="nav-item">
-                  <span className="nav-link text-light">Hello, {props.username}</span>
+                  <span className="nav-link text-light">Hello, {props.user.username}</span>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/login" onClick={props.logoutUser}>Logout</Link>
