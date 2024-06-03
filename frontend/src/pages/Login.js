@@ -117,6 +117,10 @@ export default function Login(props) {
     navigate("/");
   };
 
+  const handleRegisterClick = () => {
+        navigate("/Register"); // Redirect to the register route
+      };
+
   return (
     <div>
       <h1>Login</h1>
@@ -136,6 +140,7 @@ export default function Login(props) {
             </div>
             <div className="form-group">
               <input type="submit" className="btn btn-primary" value="Login" />
+              <button type="button" className="btn btn-secondary ml-2" onClick={handleRegisterClick}>Register</button>
             </div>
             {errorMessage !== null &&
               <div className="form-group">

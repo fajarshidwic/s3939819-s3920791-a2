@@ -22,18 +22,16 @@ function getUsers() {
   return JSON.parse(data);
 }
 
-// NOTE: In this example the login is also persistent as it is stored in local storage.
-function verifyUser(username, password) {
-  const users = getUsers();
-  for(const user of users) {
-    if(username === user.username && password === user.password)
-    {
-      setUser(username);
-      return true;
-    }
-  }
+// --- User ---------------------------------------------------------------------------------------
+async function verifyUser(username, password) {
+  const response = await axios.get(API_HOST + "/api/users/login", { params: { username, password } });
+  const user = response.data;
+  
+  // NOTE: In this example the login is also persistent as it is stored in local storage.
+  if(user !== null)
+    setUser(user);
 
-  return false;
+  return user;
 }
 
 function setUser(username) {
