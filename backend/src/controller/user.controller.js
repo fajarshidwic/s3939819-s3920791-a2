@@ -39,3 +39,16 @@ exports.create = async (req, res) => {
 
   res.json(user);
 };
+
+// Update a profile in the database.
+exports.update = async (req, res) => {
+  const user = await db.user.findByPk(req.query.username);
+  
+  // Update profile fields.
+  user.first_name = req.body.first_name;
+  user.last_name = req.body.last_name;
+
+  await user.save();
+
+  res.json(user);
+};

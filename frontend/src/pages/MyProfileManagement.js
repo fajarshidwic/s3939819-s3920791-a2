@@ -74,3 +74,164 @@
 // }
 
 // export default ProfileManagement;
+
+import { useState, useEffect, useContext } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { getUserByUsername, updateUser } from "../data/repository";
+import MessageContext from "../contexts/MessageContext";
+
+export default function MyProfileManagement(props) {
+  const [user, setUser] = useState(null);
+  const [fields, setFields] = useState(null);
+  const [errors, setErrors] = useState({ });
+  const navigate = useNavigate();
+  const { username } = useParams();
+  const { setMessage } = useContext(MessageContext);
+
+  // Load User.
+  useEffect(() => {
+    async function loadUser() {
+      const currentUser = getUserByUsername(username);
+
+      setUser(currentUser);
+      setFieldsNullToEmpty(currentUser);
+    }
+    loadUser();
+  }, [username]);
+
+  // Ensure null is not used when setting fields.
+  const setFieldsNullToEmpty = (currentFields) => {
+    // Make a copy of currentFields so the original parameter is not modified.
+    currentFields = { ...currentFields };
+
+    for(const [key, value] of Object.entries(currentFields)) {
+      currentFields[key] = value !== null ? value : "";
+    }
+
+    setFields(currentFields);
+  };
+
+  // Generic change handler.
+  const handleInputChange = (event) => {
+    setFields({ ...fields, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Validate form and if invalid do not contact API.
+    const { trimmedFields, isValid } = handleValidation();
+    if(!isValid)
+      return;
+
+    // Update user.
+    const user = await updateUser(trimmedFields);
+
+    // Show success message.
+    setMessage(<><strong>{user.first_name} {user.last_name}</strong> profile has been updated successfully.</>);
+
+    // Navigate to the users page.
+    navigate("/profile");
+  };
+
+  const handleValidation = () => {
+    const trimmedFields = trimFieldsEmptyToNull();
+    const currentErrors = { };
+
+    let key = "first_name";
+    let field = trimmedFields[key];
+    if(field === null)
+      currentErrors[key] = "First name is required.";
+    else if(field.length > 40)
+      currentErrors[key] = "First name length cannot be greater than 40.";
+
+    key = "last_name";
+    field = trimmedFields[key];
+    if(field === null)
+      currentErrors[key] = "Last name is required.";
+    else if(field.length > 40)
+      currentErrors[key] = "Last name length cannot be greater than 40.";
+
+    setErrors(currentErrors);
+
+    return { trimmedFields, isValid: Object.keys(currentErrors).length === 0 };
+  };
+
+  // Note: Empty fields are converted to null.
+  const trimFieldsEmptyToNull = () => {
+    const trimmedFields = { };
+
+    for(const [key, value] of Object.entries(fields)) {
+      let field = value;
+
+      // If value is not null trim the field.
+      if(field !== null) {
+        field = field.trim();
+
+        // If the trimmed field is empty make it null.
+        if(field.length === 0)
+          field = null;
+      }
+
+      trimmedFields[key] = field;
+    }
+
+    setFieldsNullToEmpty(trimmedFields);
+
+    return trimmedFields;
+  };
+
+  if(username === null || fields === null)
+    return null;
+
+  return (
+    <div style={{ backgroundColor: "#f5f6fa" }}>
+      <div>
+        <div className="row">
+          <div className="col-12 col-md-3 bg-white">
+            <div className="text-center mt-2">
+              <div>
+                <i className="bi bi-person-circle" style={{ fontSize: 75 }}></i>
+              </div>
+              <h5>{user.first_name} {user.last_name}</h5>
+              <h6 className="text-muted">{user.username}</h6>
+            </div>
+          </div>
+          <div className="col-12 col-md-9">
+            <div className="ml-md-4">
+              <form onSubmit={handleSubmit}>
+                <div className="row bg-white">
+                  <div className="col-12">
+                    <h6 className="my-2 text-primary">Personal Details</h6>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="first_name" className="control-label">First Name</label>
+                      <input name="first_name" id="first_name" className="form-control"
+                        value={fields.first_name} onChange={handleInputChange} />
+                      {errors.first_name && <div className="text-danger">{errors.first_name}</div>}
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="last_name" className="control-label">Last Name</label>
+                      <input name="last_name" id="last_name" className="form-control"
+                        value={fields.last_name} onChange={handleInputChange} />
+                      {errors.last_name && <div className="text-danger">{errors.last_name}</div>}
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-group text-md-right">
+                      <Link className="btn btn-secondary mr-5" to="/">Cancel</Link>
+                      <button type="submit" className="btn btn-primary">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

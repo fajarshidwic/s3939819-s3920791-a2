@@ -1,17 +1,9 @@
 import React from "react";
-import { getUserObject, removeUser } from "../data/repository";
+import { Link } from "react-router-dom";
+import { getUserObject } from "../data/repository";
 
 function MyProfile(props) {
   const user = getUserObject();
-
-  const handleDeleteProfile = async () => {
-    try {
-      // removeUser();
-      console.log("User profile deleted successfully");
-    } catch (error) {
-      console.error("Error deleting user profile:", error);
-    }
-  };
 
   return (
     <body>
@@ -23,23 +15,12 @@ function MyProfile(props) {
               <figure class='avatar avatar-profile'>
                 <img class="rounded-circle img-fluid" src={process.env.PUBLIC_URL + 'logo512.png'} alt="Logo" />
               </figure>
-              <a href="/profile-management" id="edit_profile" class="btn btn-primary btn-block my-5">
-                Edit Profile
-              </a>
-              <a href="login" onClick={handleDeleteProfile} id="delete_profile" class="btn btn-secondary btn-block my-5">
-                Delete Profile
-              </a>
+              <Link className="btn btn-primary" to={`/profile-management/${props.user.username}`}>Edit Profile</Link>
             </div>
 
             <div class="col-12 col-md-5">
                  <h4>Username</h4>
                  <p>{props.user.username}</p>
-     
-                 <h4>Email Address</h4>
-                 <p>{props.user.email}</p>
-
-                 <h4>Date of Joining</h4>
-                 <p>{props.user.createdAt}</p>
             </div></>
           )}
         </div>

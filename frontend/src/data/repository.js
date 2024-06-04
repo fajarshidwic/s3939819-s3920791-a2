@@ -42,6 +42,12 @@ function getUser() {
   return localStorage.getItem(USER_KEY);
 }
 
+async function getUserByUsername(username) {
+  const response = await axios.get(API_HOST + `/api/users/select/${username}`);
+
+  return response.data;
+}
+
 function getUserObject() {
   const username = localStorage.getItem(USER_KEY);
   const users = getUsers();
@@ -52,59 +58,11 @@ function removeUser() {
   localStorage.removeItem(USER_KEY);
 }
 
-function registerUser(username, email, password) {
-  const users = getUsers();
-  const existingUser = users.find(user => user.username === username);
-  
-  if (existingUser) {
-    return false; // User already exists
-  } else {
-    const newUser = { 
-      username,
-      email,
-      password,
-      createdAt: new Date().toISOString(), // Set createdAt to current date and time
-    };
-    users.push(newUser);
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    return true; // Registration successful
-  }
-}
 
-// Function to update user's username
-function updateUsername(username, newUsername) {
-  const users = getUsers();
-  const userIndex = users.findIndex(user => user.username === username);
-  if (userIndex !== -1) {
-    users[userIndex].username = newUsername;
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    return true;
-  }
-  return false;
-}
+async function updateUser(user) {
+  const response = await axios.put(API_HOST + "/api/users", user);
 
-// Function to update user's email
-function updateEmail(email, newEmail) {
-  const users = getUsers();
-  const userIndex = users.findIndex(user => user.email === email);
-  if (userIndex !== -1) {
-    users[userIndex].email = newEmail;
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    return true;
-  }
-  return false;
-}
-
-// Function to update user's password
-function updatePassword(password, newPassword) {
-  const users = getUsers();
-  const userIndex = users.findIndex(user => user.password === password);
-  if (userIndex !== -1) {
-    users[userIndex].password = newPassword;
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    return true;
-  }
-  return false;
+  return response.data;
 }
 
 async function findUser(id) {
@@ -121,15 +79,13 @@ async function createUser(user) {
 
 export {
   initUsers,
-  registerUser,
   verifyUser,
   setUser,
   getUser,
+  getUserByUsername,
   getUserObject,
   removeUser,
-  updateUsername, 
-  updateEmail, 
-  updatePassword,
+  updateUser,
   createUser,
   findUser
 }
