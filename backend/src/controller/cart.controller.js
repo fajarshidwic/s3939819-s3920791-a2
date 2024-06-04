@@ -1,6 +1,6 @@
 const db = require("../database");
 
-// Create a new cart
+// Function to create a new cart
 exports.createCart = async (req, res) => {
   try {
     const userId = req.body.userId;
@@ -8,10 +8,10 @@ exports.createCart = async (req, res) => {
     // Check if a cart already exists for the user
     let cart = await db.cart.findOne({ where: { userId } });
     if (cart) {
-      return res.status(400).json({ error: "Cart already exists for this user" });
+      return res.status(400).json({ error: "A cart already exists for this user" });
     }
 
-    // Create a new cart for the user
+    // Create a new cart for the user if none exists
     cart = await db.cart.create({ userId });
 
     res.status(201).json(cart);
@@ -21,7 +21,7 @@ exports.createCart = async (req, res) => {
   }
 };
 
-// Get all cart items for a specific cart
+// Function to fetch cart items for a specific cart
 exports.getCart = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -49,7 +49,7 @@ exports.getCart = async (req, res) => {
   }
 };
 
-// Add a product to the cart
+// Function to add a product to the cart
 exports.addToCart = async (req, res) => {
   try {
     const userId = req.body.userId; 
@@ -80,7 +80,7 @@ exports.addToCart = async (req, res) => {
   }
 };
 
-// Update the quantity of a product in the cart
+// Function to update the quantity of a product in the cart
 exports.updateCartItem = async (req, res) => {
   try {
     const { cartItemId, quantity } = req.body;
@@ -102,7 +102,7 @@ exports.updateCartItem = async (req, res) => {
   }
 };
 
-// Remove a product from the cart
+// Function to remove a product from the cart
 exports.removeFromCart = async (req, res) => {
   try {
     const { cartItemId } = req.params;
@@ -123,6 +123,7 @@ exports.removeFromCart = async (req, res) => {
   }
 };
 
+// Function to clear the cart
 exports.clearCart = async (req, res) => {
   try {
     console.log('Received cartId:', req.params.cartId);
